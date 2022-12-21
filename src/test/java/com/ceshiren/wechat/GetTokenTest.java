@@ -6,6 +6,9 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -22,6 +25,7 @@ public class GetTokenTest {
     *      corpsecret=kAIeK0BhhCzQ71GO6lr5x5t_Q763EPLkzTyUyUZ2LPU
     * 获取access_token的值
     * */
+    public static final Logger log = LoggerFactory.getLogger(GetTokenTest.class);
     @Test
     @DisplayName("获取企业微信的token,正向用例")
     public void getWechatToken() throws IOException {
@@ -41,6 +45,7 @@ public class GetTokenTest {
         String errmsg = wechatResponse.path("errmsg");
         String tokenValue = 0==errcode?wechatToken:errmsg;
         System.out.println("企业微信token"+tokenValue);
+        log.info("企业微信token"+tokenValue);
 
         //断言
         assertAll(
