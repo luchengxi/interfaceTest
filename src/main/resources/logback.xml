@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 默认为 ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+        <pattern>%date %-5level %logger{36}.%M\(%line\) -- %msg%n</pattern>
+    </encoder>
+
+    <!-- name指定<appender>的名称    class指定<appender>的全限定名  ConsoleAppender的作用是将日志输出到控制台-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--输出时间格式 %-5level：级别从左显示5个字符宽度-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}  %highlight%-5level %magenta([%thread]) %yellow(%logger{40}.%M\(%class{0}.java:%line\)) -- %msg%throwable%n</pattern>
+        </encoder>
+    </appender>
+    <!-- 通过 "byModel" 将时间格式化成 "yyyyMMdd" 的形式插入到 logger 的上下文中这个值对后续的配置也适用-->
+    <timestamp key="byModel" datePattern="yyyyMMdd" />
+
+    <appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${byModel}.log</file>
+
+        <!-- 配置日志所生成的目录以及生成文件名的规则-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${log.zip.path}/%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <!-- 日志总保存量为1GB -->
+            <totalSizeCap>1024MB</totalSizeCap>
+            <!-- 如果按天来回滚，则最大保存时间为365天，365天之前的都将被清理掉 -->
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>128MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{40}.%M\(%class{0}.java:%line\) -- %msg%n</pattern>
+
+        </encoder>
+
+    </appender>
+
+    <logger name="com.ceshiren" level="DEBUG" />
+    <logger name="ch.qos.logback" level="INFO" />
+    <logger name="org" level="WARN" />
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
